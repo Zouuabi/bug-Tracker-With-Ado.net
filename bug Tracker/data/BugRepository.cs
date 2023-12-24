@@ -11,7 +11,7 @@ namespace bug_Tracker.data
     public class BugRepository 
     {
 
-        private static readonly string connectionString = "server=localhost;uid=root;pwd=Doudy2k23!;database=bug_tracker";
+        private static readonly string connectionString = "server=localhost;uid=root;pwd=;database=bug_tracker";
         private readonly MySqlConnection connection = new(connectionString);
 
 

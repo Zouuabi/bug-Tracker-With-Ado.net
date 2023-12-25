@@ -35,23 +35,38 @@ namespace bug_Tracker.presentation
             Console.Write("Enter your password: ");
             string password = Console.ReadLine();
 
-            
-            String result = UserUseCases.Login(email,password);
-            new ProgressIndicator();
-            Console.SetCursorPosition(pos, Console.CursorTop);
-            Console.WriteLine(result);
-            Thread.Sleep(2000);
 
-            if (result == "You Are Logged In")
+            new ProgressIndicator();
+            object result = UserUseCases.Login(email,password);
+
+            // after login i have to simulate the session creation 
+            // by simply caching the user's infos 
+            // every interaction with BD would be related to current loged in user
+
+
+            // we can inject user info when navigating to the Home Screen 
+            // could be optimal just for this case
+
+            try
             {
-                // go to Home Screen
+               User user =  result as User;
+                // inject user to home screen
                 new HomeScreen();
+
+
             }
-            else
+            catch
             {
-                // Refresh Logi in Screen
+                Console.SetCursorPosition(pos, Console.CursorTop);
+                Console.WriteLine(result);
+                Thread.Sleep(2000);
                 new LoginScreen();
+
             }
+            
+            
+
+           
             
         }
 

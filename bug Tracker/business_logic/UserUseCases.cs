@@ -49,25 +49,31 @@ namespace bug_Tracker.business_logic
         }
 
 
-        public static String Login(string email , string password)
+        public static Object Login(string email , string password)
         {
 
             
                 UserRepository repo = new();
             try
             {
-                String? pass = repo.ReadUser(email);
-                if (pass == password)
+                 User? user  = repo.ReadUser(email);
+                if (user == null)
                 {
-                    return "You Are Logged In";
-                }else if ( pass == null)
+                    return "No User Found With This Email";
+                }else 
                 {
-                    return "Wrong email";
+                    if (user.Password == password)
+                    {
+                        return user;
+
+                    }
+                    else
+                    {
+                        return "Wrong Passowrd";
+                    }
 
                 }
-                else {
-                    return "Wrong Password ";
-                }
+                
 
             }
             catch(Exception e) 

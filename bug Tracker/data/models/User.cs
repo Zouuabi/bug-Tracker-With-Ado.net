@@ -22,6 +22,16 @@ namespace bug_Tracker.data.models
             this.Id = guid.ToString();
 
         }
+        public User(string Id , string Name, string Email, string Password)
+        {
+            this.Id = Id; 
+
+            this.Name = Name;
+            this.Email = Email;
+            this.Password = Password;
+           
+
+        }
 
     }
 }

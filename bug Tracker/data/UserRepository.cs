@@ -51,8 +51,9 @@ namespace bug_Tracker.data
 
             }
         }
-        public String? ReadUser(string email) {
-            string sql = "SELECT password from user WHERE email=@email";
+        public User? ReadUser(string email) {
+            User? user = null ;
+            string sql = "SELECT * from user WHERE email=@email";
             MySqlCommand cmd = new(sql, connection);
 
             cmd.Parameters.AddWithValue("@email", email);
@@ -60,11 +61,20 @@ namespace bug_Tracker.data
             try
             {
                 OpenConnection();
-               String? password = (String?) cmd.ExecuteScalar();
+               MySqlDataReader reader =  cmd.ExecuteReader(); 
                 CloseConnection();
+               
+                while (reader.Read())
+                {
+                     user = new((String)reader["id"], (String)reader["name"], (String)reader["email"], (String)reader["password"]);
 
+
+                }
+
+                reader.Close();
+                return user ; 
                 
-                    return password; 
+                    
                  
             }
             catch 

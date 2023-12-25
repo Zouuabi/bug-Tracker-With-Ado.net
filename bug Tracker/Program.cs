@@ -11,15 +11,6 @@ class Program
     {
 
         new MyApp();
-
-
-
-
-
-
-
-            
-       
-      
+  
     }
 }

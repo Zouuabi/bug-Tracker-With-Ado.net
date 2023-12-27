@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 
 using bug_Tracker.data.models;
 
+//Todo : fix password issue in Connection String
+
 namespace bug_Tracker.data
 {
     public class UserRepository
     {
-        private static readonly string connectionString = "server=localhost;uid=root;pwd=;database=bug_tracker";
+        private static readonly string connectionString = "server=localhost;uid=root;pwd=Doudy2k23!;database=bug_tracker";
         private readonly MySqlConnection connection = new(connectionString);
 
         
@@ -62,7 +64,7 @@ namespace bug_Tracker.data
             {
                 OpenConnection();
                MySqlDataReader reader =  cmd.ExecuteReader(); 
-                CloseConnection();
+                
                
                 while (reader.Read())
                 {
@@ -72,15 +74,16 @@ namespace bug_Tracker.data
                 }
 
                 reader.Close();
+                CloseConnection();
                 return user ; 
                 
                     
                  
             }
-            catch 
+            catch (Exception ex) 
             {
                 CloseConnection();
-                throw new Exception("Something Went Wrong Try Again Ame laktharya Email Already Used");
+                throw new Exception(ex.Message);
 
             }
 

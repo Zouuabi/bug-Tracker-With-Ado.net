@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using bug_Tracker.data.models;
 using MySqlConnector;
 
 namespace bug_Tracker.data
@@ -11,7 +12,7 @@ namespace bug_Tracker.data
     public class BugRepository 
     {
 
-        private static readonly string connectionString = "server=localhost;uid=root;pwd=;database=bug_tracker";
+        private static readonly string connectionString = "server=localhost;uid=root;pwd=Doudy2k23!;database=bug_tracker";
         private readonly MySqlConnection connection = new(connectionString);
 
 
@@ -26,10 +27,10 @@ namespace bug_Tracker.data
             connection.Close();
         }
 
-       public  void CreateBug(int reference, string bugDescription, string author, string status = "not solved")
+       public  void CreateBug(String reference, string bugDescription, string author, string status = "not solved")
         {
             // id must be automatic (programmation not MYSQL)
-            string sqlQuery = "INSERT INTO Bug VALUES(@id , @bugDescription , @author , @status)";
+            string sqlQuery = "INSERT INTO Bug VALUES(@ref , @description , @authorID , @status)";
 
             MySqlCommand cmd = new(sqlQuery, connection);
              
@@ -47,8 +48,85 @@ namespace bug_Tracker.data
             }
 
         }
+        
 
-        public string GetBugStatus(int reference)
+      
+           
+        public void ReadBug(int reference)
+        {
+            string sqlQuery = "SELECT * FROM Bug  WHERE id = @id";
+
+
+
+            // zeda najmou nekhdhou lista mte3 el bugs lkoll
+            // open connection 
+
+            MySqlCommand cmd = new(sqlQuery, connection);
+            cmd.Parameters.Add("@ref", MySqlDbType.Int32);
+
+            cmd.Parameters["@ref"].Value = reference;
+
+
+            try
+            {
+            OpenConnection();
+                MySqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    int idd = (int)reader["ref"]; // 0
+                    string des = (string)reader["description"]; // 1
+                    string author = (string)reader["author"]; // 2 
+                    string status = (string)reader["status"]; // 3
+                    // barra lawej esh bch na3mlou behom
+                }
+                reader.Close();
+
+            }
+            catch (Exception e)
+            {
+                string error = e.Message;
+
+            CloseConnection();
+            }
+
+            // close connection
+        }
+        public List<Bug>? ReadAllBugs()
+        {
+
+            List<Bug> bugs = new(); 
+            string sqlQuery = "SELECT * FROM Bug   ";
+
+
+
+           
+
+            MySqlCommand cmd = new(sqlQuery, connection);
+
+
+
+            try
+            {
+                OpenConnection();
+                MySqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    bugs.Add(new Bug((string)reader["ref"], (string)reader["description"], (string)reader["status"], (string)reader["authorID"]));
+                   
+                }
+                reader.Close();
+                CloseConnection();
+                return bugs;
+
+            }
+            catch 
+            {
+                CloseConnection();
+                return null;
+
+            }
+        }
+        public string GetBugStatus(string reference)
         {
             string sqlQuery = "SELECT status FROM Bug where id = @id";
             MySqlCommand cmd = new(sqlQuery, connection);
@@ -74,46 +152,6 @@ namespace bug_Tracker.data
 
             }
         }
-        public void ReadBug(int reference)
-        {
-            string sqlQuery = "SELECT * FROM Bug  WHERE id = @id";
-
-
-
-            // zeda najmou nekhdhou lista mte3 el bugs lkoll
-            // open connection 
-            OpenConnection();
-
-            MySqlCommand cmd = new(sqlQuery, connection);
-            cmd.Parameters.Add("@ref", MySqlDbType.Int32);
-
-            cmd.Parameters["@ref"].Value = reference;
-
-
-            try
-            {
-                MySqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    int idd = (int)reader["ref"]; // 0
-                    string des = (string)reader["description"]; // 1
-                    string author = (string)reader["author"]; // 2 
-                    string status = (string)reader["status"]; // 3
-                    // barra lawej esh bch na3mlou behom
-                }
-                reader.Close();
-
-            }
-            catch (Exception e)
-            {
-                string error = e.Message;
-
-            }
-
-            // close connection
-            CloseConnection();
-        }
-
         public void UpdateBug(int reference, string bugDescription, string status)
         {
 

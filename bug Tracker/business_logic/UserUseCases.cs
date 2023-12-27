@@ -49,27 +49,51 @@ namespace bug_Tracker.business_logic
         }
 
 
-        public static Object Login(string email , string password)
+        public static Dictionary<string, dynamic> Login(string email , string password)
         {
 
             
                 UserRepository repo = new();
+            Dictionary<string, dynamic> response; 
+
             try
             {
                  User? user  = repo.ReadUser(email);
                 if (user == null)
                 {
-                    return "No User Found With This Email";
+                    response = new ()
+                    { {
+                            "status",
+                            0
+                    }, 
+                    {
+                        "body",
+                            "No User Found With This Email"
+                            }
+                };
+                return  response ;
+                
                 }else 
                 {
                     if (user.Password == password)
                     {
-                        return user;
+                        response = new() { { "status",1 },{"body" , user} }; 
+                        return response ;
 
                     }
                     else
                     {
-                        return "Wrong Passowrd";
+                        response = new()
+                    { {
+                            "status",1
+                            
+                    },
+                    {
+                        "body",
+                            "Wrong Password"
+                            }
+                };
+                        return response;
                     }
 
                 }
@@ -78,7 +102,17 @@ namespace bug_Tracker.business_logic
             }
             catch(Exception e) 
             {
-                return e.Message; 
+                 response = new()
+    { {
+            "status",
+            0
+    },
+    {
+        "body",
+            "Something went wrong ! "
+            }
+};
+                return response;
             }
 
             

@@ -37,32 +37,27 @@ namespace bug_Tracker.presentation
 
 
             new ProgressIndicator();
-            object result = UserUseCases.Login(email,password);
+            Dictionary<string,dynamic> result = UserUseCases.Login(email,password);
 
-            // after login i have to simulate the session creation 
-            // by simply caching the user's infos 
-            // every interaction with BD would be related to current loged in user
-
-
-            // we can inject user info when navigating to the Home Screen 
-            // could be optimal just for this case
-
-            try
+            if (result["status"] == 1)
             {
-               User user =  result as User;
-                // inject user to home screen
-                new HomeScreen();
 
-
+                User user = result["body"]; 
+                new HomeScreen(user);
             }
-            catch
+            else
             {
                 Console.SetCursorPosition(pos, Console.CursorTop);
-                Console.WriteLine(result);
+                Console.WriteLine(result["body"]);
                 Thread.Sleep(2000);
-                new LoginScreen();
+                new WelcomeScreen();
 
             }
+
+            
+
+           
+           
             
             
 
